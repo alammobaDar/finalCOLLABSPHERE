@@ -14,8 +14,7 @@ const addTask = async (userID, projectID, tasks)=> {
   }catch(error){
     console.error(  );
   }
-
-
+ 
 }
 export default function NewTask({ onAdd, projectID }) {
   const [enteredTask, setEnteredTask] = useState("");
