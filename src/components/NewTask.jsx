@@ -6,17 +6,19 @@ import {getFirestore, addDoc, doc, collection} from "firebase/firestore";
 const auth = getAuth(app);
 const db = getFirestore(app); 
 
-const addTask = async (userID, projectID, tasks)=> {
+const addTask = async (userID, projectId, tasks)=> {
   try{
-    const taskColRef = collection(db, "users", userID, "projects", projectID, "tasks")
+    console.log("projectID: ", projectId)
+    const taskColRef = collection(db, "users", userID, "projects", projectId, "tasks")
     const taskDocRef = await addDoc(taskColRef, tasks);
+    console.log("Task Doc ref: ", taskDocRef.id)
     return taskDocRef.id;
   }catch(error){
-    console.error(  );
+    console.error();
   }
  
 }
-export default function NewTask({ onAdd, projectID }) {
+export default function NewTask({ onAdd, projectId }) {
   const [enteredTask, setEnteredTask] = useState("");
 
   function handleChange(event) {
@@ -31,9 +33,14 @@ export default function NewTask({ onAdd, projectID }) {
 
     const user = auth.currentUser;
     if (user) {
-      const taskData = {title: enteredTask, projectId: projectID}
-      const taskId = await addTask(user.uid, projectID, taskData)
+      const taskData = {title: enteredTask, projectId: projectId}
+      console.log("Adding task: ", taskData)
+
+      const taskId = await addTask(user.uid, projectId, taskData)
+
+      
       if(taskId){
+        console.log("Task id: ", taskId)
         onAdd({...taskData, id: taskId});
         setEnteredTask("");
       }
